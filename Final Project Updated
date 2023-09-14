@@ -1,0 +1,75 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Account { // Base Class
+private:
+    string accountNumber;
+    double balance;
+
+public:
+    Account(const string& accNumber, double initialBalance)
+        : accountNumber(accNumber), balance(initialBalance) {}
+
+    ~Account() {   // Destructor
+        cout << "Thank You" << endl;
+    }
+
+    void deposit(double amount) {
+        balance += amount;
+    }
+
+    
+    void setBalance(double newBalance) {   //Encapsulation
+        balance = newBalance;
+    }
+    // Getter method to access balance
+     double getBalance() const {
+        return balance;
+    }
+
+    // Withdraw method
+    virtual void withdraw(double amount) = 0; // Pure virtual function
+};
+// Child class
+class SavingsAccount : public Account {   // Inheritance
+public:
+    SavingsAccount(const string& accNumber, double initialBalance)
+        : Account(accNumber, initialBalance) {}
+
+    void withdraw(double amount) {     
+       
+        if (getBalance() >= amount) {  // Additional fee for savings account
+            setBalance(getBalance() - (amount + 10.0));
+        } else {
+            cout << "Insufficient funds." << endl;
+        }
+    }
+};
+
+class CurrentAccount : public Account {
+public:
+    CurrentAccount(const string& accNumber, double initialBalance)
+        : Account(accNumber, initialBalance) {}
+
+    void withdraw(double amount) {   //Polymorphism
+        if (getBalance() >= amount) {
+            setBalance(getBalance() - amount);
+        } else {
+            cout << "Insufficient funds." << endl;
+        }
+    }
+};
+
+int main() {
+    SavingsAccount s1("12345", 1000.0);    //Abstraction
+    CurrentAccount c1("67890", 1500.0);
+
+    s1.deposit(200.0);
+    c1.withdraw(100.0);
+
+    cout << "Savings Account Balance: " << s1.getBalance() << endl;
+    cout << "Current Account Balance: " << c1.getBalance() << endl;
+
+    return 0;
+}
